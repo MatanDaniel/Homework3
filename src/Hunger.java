@@ -1,4 +1,4 @@
-public class Hunger implements HungerState{
+public class Hunger implements  HungerState{
 
     @Override
     public void doAction(Swimmable obj) {

@@ -2,6 +2,8 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,15 +11,20 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.concurrent.CyclicBarrier;
 
-public class AquaPanel extends JPanel implements Runnable, Observer{
+public class AquaPanel extends JPanel implements Runnable{
     private JFrame frame = new JFrame("Info");
     private static BufferedImage image = null;
     private int totalEatCounter = 0;
     public HashSet<SeaCreature> seaCreatures = new HashSet<>();
+    public HashSet<Swimmable> animals = new HashSet<>();
+    public HashSet<Immobile> plants = new HashSet<>();
+
     public JPanel buttonPanel = new JPanel();
     boolean isPaused=false;
+    private CareTaker careTakerMemento;
 
-    public AquaPanel() {
+    public AquaPanel(CareTaker careTakerMemento) {
+        this.careTakerMemento=careTakerMemento;
         buttonPanel.setLayout(new GridLayout());
         setPreferredSize(new Dimension(1200, 700));
         JButton addAnimal = new JButton("Add Animal");
@@ -28,6 +35,7 @@ public class AquaPanel extends JPanel implements Runnable, Observer{
         JButton info = new JButton("Info");
         JButton exit = new JButton("Exit");
         JButton decorator = new JButton("Decorator");
+        JButton duplicate = new JButton("Duplicate Animal");
 
         buttonPanel.add(addAnimal);
         buttonPanel.add(sleep);
@@ -36,6 +44,7 @@ public class AquaPanel extends JPanel implements Runnable, Observer{
         buttonPanel.add(food);
         buttonPanel.add(info);
         buttonPanel.add(decorator);
+        buttonPanel.add(duplicate);
         buttonPanel.add(exit);
 
         BorderLayout border = new BorderLayout();
@@ -48,6 +57,7 @@ public class AquaPanel extends JPanel implements Runnable, Observer{
         sleep.addActionListener(e -> sleepAll());
         wakeUp.addActionListener(e -> wakeAll());
         info.addActionListener(e -> getInfo());
+        duplicate.addActionListener(e -> dupAnimal());
         JPanelDecorator dec = new JPanelDecorator(seaCreatures);
         dec.setPreferredSize(new Dimension(1200, 500));
 
@@ -56,7 +66,7 @@ public class AquaPanel extends JPanel implements Runnable, Observer{
             dec1.setVisible(true);
 
 
-     });
+        });
         addAnimal.addActionListener(e -> new AddAnimalDialog(this));
 
     }
@@ -94,6 +104,22 @@ public class AquaPanel extends JPanel implements Runnable, Observer{
 
     }
 
+    public void dupAnimal(){
+        try{
+            if(seaCreatures.size()>=5)
+                throw new Exception("You can't duplicate animals, The Aquarium already contains 5 animals!"); // the aquarium limits to only 5 swimmable
+            else if(seaCreatures.size()==0)
+                throw new Exception("no animals in aquarium to duplicate"); // the aquarium limits to only 5 swimmable
+            else{
+                AddDupAnimal duplicateDialog=new AddDupAnimal(this,seaCreatures);
+            }
+        }
+        catch(Exception e1){
+            JOptionPane.showMessageDialog(null,e1.getMessage());
+        }
+    }
+
+
     public void getInfo() {
         if (this.frame.isVisible()) {
             this.frame.dispose();
@@ -113,6 +139,7 @@ public class AquaPanel extends JPanel implements Runnable, Observer{
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
         }
+
     }
 
     public JTable getAnimalList() {
@@ -198,10 +225,13 @@ public class AquaPanel extends JPanel implements Runnable, Observer{
             g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
         }
         //Draw all creatures on screen
-        for (SeaCreature seaCreature : seaCreatures) {
-            if (seaCreature instanceof Swimmable temp) {
+        for (SeaCreature s : seaCreatures) {
+            if (s instanceof Swimmable){
+                Swimmable temp = (Swimmable) s;
                 temp.drawCreature(g);
-            } else if (seaCreature instanceof Immobile temp) {
+            }
+            else if(s instanceof Immobile){
+                Immobile temp = (Immobile) s;
                 temp.drawCreature(g);
                 System.out.println("here");
             }
@@ -211,6 +241,33 @@ public class AquaPanel extends JPanel implements Runnable, Observer{
             Worm.drawAnimal(g, this);
         }
     }
+
+    public void addAnimal(Swimmable newSwimm)
+    {
+        //newSwimm.addObserver(this);
+        seaCreatures.add(newSwimm); //add the new simmable object
+        repaint(); // call the paintCompoment function
+        new Thread(newSwimm).start(); // start the thread
+
+
+    }
+
+    public HashSet<Swimmable> getSwimmableSet(){
+        for (var sc : seaCreatures) {
+            if (sc instanceof Swimmable) {
+                animals.add((Swimmable)sc);
+            }
+        }
+        return animals;
+    }
+    public HashSet<Immobile> getPlantSet(){
+        for (var sc : seaCreatures) {
+            if (sc instanceof Immobile) {
+                plants.add((Immobile)sc);
+            }
+        }
+        return plants;}
+
     @Override
     public void run() {
         while (true) {
@@ -223,9 +280,5 @@ public class AquaPanel extends JPanel implements Runnable, Observer{
         }
     }
 
-    @Override
-    public void update(String msg) {
-        JOptionPane.showMessageDialog(null, msg + " is hungry!", "Notify", JOptionPane.PLAIN_MESSAGE); // pop up message for when the animal is hungry
-    }
 
 }

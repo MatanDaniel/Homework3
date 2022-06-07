@@ -6,8 +6,11 @@ public abstract class Immobile implements SeaCreature{
     protected int size;
     protected int Coordinate_x;
     protected int Coordinate_y;
+    public final int objectID;
+    private static int counter=0;
 
     public Immobile(int size, int coordinate_x, int coordinate_y) {
+        this.objectID=++counter;
         this.size = size;
         Coordinate_x = coordinate_x;
         Coordinate_y = coordinate_y;
@@ -21,11 +24,10 @@ public abstract class Immobile implements SeaCreature{
         Coordinate_y = coordinate_y;
     }
 
-
-
     public int getCoordinate_x() {
         return Coordinate_x;
     }
+    public int getID(){return objectID;}
 
     public int getCoordinate_y() {
         return Coordinate_y;
@@ -47,13 +49,20 @@ public abstract class Immobile implements SeaCreature{
         return size;
     }
 
+    public void setState(Color color,int size,int x,int y)
+    {
+        this.color=color;
+        this.size=size;
+        this.Coordinate_x=x;
+        this.Coordinate_y=y;
+
+    }
+
     @Override
     public void drawCreature(Graphics g)  {
     }
 
-    public String getName() {
-        return name;
-    }
+    public abstract String getPlantName();
 
     public void setName(String immobilename){
         this.name = immobilename;

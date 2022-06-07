@@ -6,7 +6,6 @@ import java.util.concurrent.CyclicBarrier;
  */
 public class Jellyfish extends Swimmable implements MarineAnimal {
     private static final int EAT_DISTANCE = 4;
-    private int frequency;
     private int size;
     private int eatCount;
     private Color col;
@@ -33,11 +32,9 @@ public class Jellyfish extends Swimmable implements MarineAnimal {
         eatCount = 0;
         y_dir = 1;
         x_dir = 1;
-        this.frequency = this.size*2;
-        this.hungry = new Hunger(); // creating a hunger state
-        this.full = new Satiated(); // creating a satiated state (מצב שבעה)
-        this.state = new Satiated(); // default initialize state (המצב שבו מתחילים)
     }
+
+    // Getters for each field:
 
     /**
      * getter
@@ -47,6 +44,8 @@ public class Jellyfish extends Swimmable implements MarineAnimal {
     public int getEAT_DISTANCE() {
         return EAT_DISTANCE;
     }
+
+    // TODO: override the run method of thread
 
     @Override
     public int getSize() {
@@ -147,6 +146,8 @@ public class Jellyfish extends Swimmable implements MarineAnimal {
     public int getY_dir() {
         return y_dir;
     }
+
+    // Setters for each field
 
     /**
      * setter
@@ -259,7 +260,15 @@ public class Jellyfish extends Swimmable implements MarineAnimal {
     }
 
     @Override
-    public void setState(HungerState state) {
+    public void setState(Color col, int size, int x_front, int y_front, int horSpeed, int verSpeed,int x_dir,int y_dir) {
+        this.col=col;
+        this.size=size;
+        this.x_front=x_front;
+        this.y_front=y_front;
+        this.horSpeed=horSpeed;
+        this.verSpeed=verSpeed;
+        this.x_dir=x_dir;
+        this.y_dir=y_dir;
 
     }
     @Override
@@ -308,15 +317,28 @@ public class Jellyfish extends Swimmable implements MarineAnimal {
     }
 
     @Override
-    public void attach(Observer object) {
-        hungryObservers.add(object);
+    public void attach() {
+
+    }
+
+    public Jellyfish clone() {
+        return new Jellyfish(size,x_front,y_front,horSpeed,verSpeed,col);
+    }
+
+    @Override
+    public void editSwimmable(int size, int x, int y, int horSpeed, int verSpeed, Color col) {
+        this.size=size;
+        this.horSpeed=horSpeed;
+        this.verSpeed=verSpeed;
+        this.x_front=x;
+        this.y_front=y;
+        this.col=col;
     }
 
     @Override
     public void notifyAllObservers() {
-        for(Observer x : hungryObservers){
+        for(Observer x : observers){
             x.update(getAnimalName());
         }
     }
-
 }
