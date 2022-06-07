@@ -25,6 +25,7 @@ public class AddAnimalDialog extends JDialog {
 
     public AddAnimalDialog(AquaPanel panel) {
         aquaPanel = panel;
+
         this.createDialog();
     }
 
