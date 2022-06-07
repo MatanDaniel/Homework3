@@ -1,13 +1,13 @@
 import java.util.ArrayList;
-import java.util.Vector;
 
 public interface Subject {
+    public ArrayList<Observer> observers = new ArrayList<Observer>();
+
     public HungerState getHungerState();
 
     public void setHungerState(HungerState hungerState);
 
-    public void attach(Observer object);
+    public void attach();
 
     public void notifyAllObservers();
-
 }

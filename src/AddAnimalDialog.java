@@ -75,47 +75,47 @@ public class AddAnimalDialog extends JDialog {
     }
 
     public void SubmitButton(){
-            // Transferring elements into variables to save code line:
-            String type = animalList.getSelectedItem().toString();
-            int size = Integer.parseInt(sizeTextField.getText());
-            int horSpeed = Integer.parseInt(horSpeedTextField.getText());
-            int verSpeed = Integer.parseInt(verSpeedTextField.getText());
-            Color col = getColor();
+        // Transferring elements into variables to save code line:
+        String type = animalList.getSelectedItem().toString();
+        int size = Integer.parseInt(sizeTextField.getText());
+        int horSpeed = Integer.parseInt(horSpeedTextField.getText());
+        int verSpeed = Integer.parseInt(verSpeedTextField.getText());
+        Color col = getColor();
 
-            // validations for each field:
-            if (size < 20 || size > 320)
-                JOptionPane.showMessageDialog(null, "Error: Animal's size must be between 20 to 320");
-            if (horSpeed < 1 || horSpeed > 10)
-                JOptionPane.showMessageDialog(null, "Error: Animal's horizontal velocity must be between 1-10!");
-            if (verSpeed < 1 || verSpeed > 10)
-                JOptionPane.showMessageDialog(null, "Error: Animal's vertical velocity must be between 1-10!");
-            if (!(size < 20 || size > 320) && !(horSpeed < 1 || horSpeed > 10) && !(verSpeed < 1 || verSpeed > 10)) {
+        // validations for each field:
+        if (size < 20 || size > 320)
+            JOptionPane.showMessageDialog(null, "Error: Animal's size must be between 20 to 320");
+        if (horSpeed < 1 || horSpeed > 10)
+            JOptionPane.showMessageDialog(null, "Error: Animal's horizontal velocity must be between 1-10!");
+        if (verSpeed < 1 || verSpeed > 10)
+            JOptionPane.showMessageDialog(null, "Error: Animal's vertical velocity must be between 1-10!");
+        // TODO: color - string -> int
+        if (!(size < 20 || size > 320) && !(horSpeed < 1 || horSpeed > 10) && !(verSpeed < 1 || verSpeed > 10)) {
 
-                if (aquaPanel.seaCreatures.size() >= 5) {
-                    JOptionPane.showMessageDialog(null, "Error: Can't add more than 5 animals!");
-                    return;
-                }
-                AnimalFactory factory1 = new AnimalFactory(this);
-                Swimmable fac = (Swimmable) factory1.produceSeaCreature(type);
-                if(aquaPanel.isPaused)
-                    fac.paused = true;
-
-                PlantFactory plantFac = new PlantFactory(this);
-                Immobile creature = (Immobile) plantFac.produceSeaCreature(type);
-                if (fac == null){
-                    aquaPanel.seaCreatures.add(creature);
-                }
-                else{
-                    aquaPanel.seaCreatures.add(fac);
-                    fac.attach(aquaPanel);
-                }
-
-                if (fac != null)
-                    fac.start();
-
-                this.dispose();
+            if (aquaPanel.seaCreatures.size() >= 5) {
+                JOptionPane.showMessageDialog(null, "Error: Can't add more than 5 animals!");
+                return;
             }
+            AnimalFactory factory1 = new AnimalFactory(this);
+            Swimmable fac = (Swimmable) factory1.produceSeaCreature(type);
+            if(aquaPanel.isPaused)
+                fac.paused = true;
+
+            PlantFactory plantFac = new PlantFactory(this);
+            Immobile creature = (Immobile) plantFac.produceSeaCreature(type);
+            if (fac == null){
+                aquaPanel.seaCreatures.add(creature);
+            }
+            else{
+                aquaPanel.seaCreatures.add(fac);
+            }
+
+            if (fac != null)
+                fac.start();
+
+            this.dispose();
         }
+    }
 
     public Color getColor() {
         String tmp = colorList.getSelectedItem().toString();
@@ -132,5 +132,4 @@ public class AddAnimalDialog extends JDialog {
             default -> null;
         };
     }
-
 }

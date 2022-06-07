@@ -6,6 +6,10 @@ public class Zostera extends Immobile {
     }
 
     @Override
+    public String getPlantName() {
+        return "Zostera";
+    }
+    @Override
   public void drawCreature(Graphics g) {
         Graphics2D g2 = (Graphics2D)g;
         g2.setStroke(new BasicStroke(3));

@@ -6,6 +6,7 @@ public class AnimalFactory implements AbstractSeaFactory {
         this.UI = UI;
     }
 
+    //
     @Override
     public SeaCreature produceSeaCreature(String factory) {
         if (factory.equals("Fish"))

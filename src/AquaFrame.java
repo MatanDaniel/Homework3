@@ -7,10 +7,12 @@ import java.awt.Dimension;
 public class AquaFrame extends JFrame {
 
     AquaPanel aquarium;
-
+    private AquaPanel panel;
+    private CareTaker careTakerMemento;
     public AquaFrame()
     {
-        aquarium = new AquaPanel();
+        this.careTakerMemento=new CareTaker();
+        aquarium = new AquaPanel(careTakerMemento);
         var aquariumThread = new Thread(aquarium);
         JFrame frame = new JFrame("Menu");
         frame.setVisible(true);
@@ -42,6 +44,29 @@ public class AquaFrame extends JFrame {
         help.add(helpItem);
 
         helpItem.addActionListener(e -> JOptionPane.showMessageDialog(null, " Home Work 3 \n GUI @ Threads"));
+
+        JMenu memento = new JMenu("Memento");
+        menu.add(memento);
+
+        JMenuItem saveObjectState = new JMenuItem("Save objects' state");
+        JMenuItem restoreObjectState = new JMenuItem("Restore objects' state");
+
+        memento.add(saveObjectState);
+        memento.add(restoreObjectState);
+
+        saveObjectState.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SaveObjectDialog sbd=new SaveObjectDialog(aquarium,careTakerMemento);
+            }
+        });
+
+        restoreObjectState.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                RestoreObjectState ros=new RestoreObjectState(aquarium,careTakerMemento);
+            }
+        });
 
         BorderLayout border = new BorderLayout();
         frame.setLayout(border);

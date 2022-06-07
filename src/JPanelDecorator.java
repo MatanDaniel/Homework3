@@ -1,18 +1,19 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.stream.Stream;
 
 public class JPanelDecorator extends JDialog {
 
     public JPanel buttonPanel = new JPanel();
-    public HashSet<SeaCreature> seaCreature;
+    public HashSet<SeaCreature> seaCreatureHashSet = new HashSet<>();
     public JList animalBox;
     public JButton changeColor;
     AquaPanel aquaPanel;
 
     public JPanelDecorator(HashSet<SeaCreature> seaCreatures){
-        this.seaCreature = seaCreatures;
+        this.seaCreatureHashSet = seaCreatures;
         animalBox = new JList(getAnimalNames(seaCreatures).toArray());
         add(animalBox);
 

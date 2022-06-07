@@ -7,6 +7,9 @@ public class Fish extends Swimmable implements MarineAnimal {
     private Color col;
     private int eatCount;
     private HungerState state;
+    private Hunger hungry;
+    private Satiated full;
+
 
     private int foodX, foodY;
     /**
@@ -64,16 +67,14 @@ public class Fish extends Swimmable implements MarineAnimal {
                     exception.printStackTrace();
                 }
             }
+
             moveFish();
+
             try {
                 Thread.sleep(16);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            if (this.getFrequency() == 0){
-                update();
-            }
-
         }
     }
 
@@ -96,6 +97,18 @@ public class Fish extends Swimmable implements MarineAnimal {
         return this.size;
     }
 
+    @Override
+    public void setState(Color col, int size, int x_front, int y_front, int horSpeed, int verSpeed,int x_dir,int y_dir) {
+        this.col=col;
+        this.size=size;
+        this.x_front=x_front;
+        this.y_front=y_front;
+        this.horSpeed=horSpeed;
+        this.verSpeed=verSpeed;
+        this.x_dir=x_dir;
+        this.y_dir=y_dir;
+
+    }
     public void eatInc() {
         eatCount++;
         if (eatCount >= EAT_DISTANCE) {
@@ -131,6 +144,9 @@ public class Fish extends Swimmable implements MarineAnimal {
     public Color getCol() {
         return col;
     }
+
+
+
 
     /**
      * setter
@@ -277,11 +293,6 @@ public class Fish extends Swimmable implements MarineAnimal {
     }
 
     @Override
-    public void setState(HungerState state) {
-
-    }
-
-    @Override
     public void drawCreature(Graphics g) {
         g.setColor(col);
         if (x_dir == 1) // fish swims to right side
@@ -376,15 +387,29 @@ public class Fish extends Swimmable implements MarineAnimal {
     }
 
     @Override
-    public void attach(Observer object) {
-        hungryObservers.add(object);
+    public void attach() {
+
+    }
+
+    @Override
+    public Fish clone() {
+        return new Fish(size,x_front,y_front,horSpeed,verSpeed,col);
+    }
+
+    @Override
+    public void editSwimmable(int size, int x, int y, int horSpeed, int verSpeed, Color col) {
+        this.size=size;
+        this.horSpeed=horSpeed;
+        this.verSpeed=verSpeed;
+        this.x_front=x;
+        this.y_front=y;
+        this.col=col;
     }
 
     @Override
     public void notifyAllObservers() {
-        for(Observer x : hungryObservers){
+        for(Observer x : observers){
             x.update(this.getAnimalName());
         }
     }
-
 }
